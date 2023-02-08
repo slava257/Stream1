@@ -1,9 +1,13 @@
 package Stream;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 public class Main {
         public static void main(String[] args) {
@@ -22,7 +26,7 @@ public class Main {
             numbers.add(6);
 
 
-            findMinMax(numbers.stream(),Integer::compare,((integer, integer2) -> System.out.println(integer+" "+integer2)));
+            findMinMax(numbers.stream().parallel(),Integer::compareTo,((integer, integer2) -> System.out.println(integer+" "+integer2)));
             System.out.println(printTheNumberOfEvenNumbers(numbers ) + "количество четных чисел");
         }
     //Задание 1
@@ -37,18 +41,15 @@ public class Main {
     //Если стрим не содержит элементов, то вызовите:
     //minMaxConsumer.accept(null, null);
         public static<T> void findMinMax(Stream<? extends T> stream,
-                                     Comparator<? super T> order,
-                                     BiConsumer<? super T, ? super T> minMaxConsumer) {
-            List<? extends T> number = stream.collect(Collectors.toList());
+                                         Comparator<? super T> order,
+                                         BiConsumer<? super T, ? super T> minMaxConsumer) {
+            List<? extends T> list = stream.collect(Collectors.toList());
             //Optional<? extends T> min=numbs.stream().min(order);
             //Optional<? extends T> max=numbs.stream().max(order);
-            List<? extends T> min = number.stream().sorted(order).collect(Collectors.toList());
-            List < ? extends T> max = number.stream().sorted((o1, o2) ->-1*order.compare(o1,o2) ).collect(Collectors.toList());
-            if (!number.isEmpty()) {
-                minMaxConsumer.accept(min.get(0), max.get(0));
-            }else {
-                minMaxConsumer.accept(null,null);
-            }
+            //List<? extends T> min = number.stream().sorted(order).collect(Collectors.toList());
+            // List < ? extends T> max = number.stream().sorted((o1, o2) ->-1*order.compare(o1,o2) ).collect(Collectors.toList());
+
+            minMaxConsumer.accept(list.stream().sorted(order).findFirst().orElse(null),list.stream().sorted(order).reduce((e1, e2) -> e2).orElse(null));
         }
 
     //Задание 2
