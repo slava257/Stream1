@@ -49,7 +49,7 @@ public class Main {
             //List<? extends T> min = number.stream().sorted(order).collect(Collectors.toList());
             // List < ? extends T> max = number.stream().sorted((o1, o2) ->-1*order.compare(o1,o2) ).collect(Collectors.toList());
 
-            minMaxConsumer.accept(list.stream().sorted(order).findFirst().orElse(null),list.stream().sorted(order).reduce((e1, e2) -> e2).orElse(null));
+            minMaxConsumer.accept(list.stream().min(order).orElse(null),list.stream().max(order).orElse(null));
         }
 
     //Задание 2
